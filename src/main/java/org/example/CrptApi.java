@@ -20,7 +20,7 @@ public class CrptApi {
     // Семафор для ограничения кол-ва одновременных запросов к API
     private final Semaphore semaphore;
 
-    // Кол-вом доступных разрешений
+    // Кол-во доступных разрешений
     private final AtomicInteger permits;
 
     // main для вызова указанного в задании метода createDocument()
@@ -53,7 +53,7 @@ public class CrptApi {
         product.setUitCode("uit_code_value");
         product.setUituCode("uitu_code_value");
 
-        document.setProducts(new CrptApi.Product[] {product});
+        document.setProducts(new CrptApi.Product[]{product});
 
         Description description = new Description();
         description.setParticipantInn("participant_inn_value");
@@ -64,7 +64,7 @@ public class CrptApi {
 
         ExecutorService executor = Executors.newFixedThreadPool(5); // Создаем пул из 5 потоков
 
-        // Создаем 10 задач, каждая из которых выполняет вызов createDocument()
+        // Создаем 100 задач, каждая из которых выполняет вызов createDocument()
         for (int i = 0; i < 100; i++) {
             executor.execute(() -> crptApi.createDocument(document, signature));
         }
@@ -81,7 +81,7 @@ public class CrptApi {
         this.httpClient = new OkHttpClient();
         this.gson = new Gson();
         this.semaphore = new Semaphore(requestLimit);
-        permits = new AtomicInteger(requestLimit);
+        this.permits = new AtomicInteger(requestLimit);
 
         // Освобождаем достпуные разрешающие сигналы семафора раз в заданный интервал времени.
         // Поскольку задан лимит запросов в определённый интервал времени, то заводим планировщик задач.
